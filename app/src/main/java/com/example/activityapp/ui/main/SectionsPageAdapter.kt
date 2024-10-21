@@ -1,10 +1,10 @@
-package com.specknet.pdiotapp.ui.main
+package com.example.activityapp.ui.main
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.specknet.pdiotapp.R
+import com.example.activityapp.R
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
