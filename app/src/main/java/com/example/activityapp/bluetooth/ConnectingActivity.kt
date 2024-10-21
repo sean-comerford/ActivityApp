@@ -1,4 +1,4 @@
-package com.specknet.pdiotapp.bluetooth
+package com.example.activityapp.bluetooth
 
 import android.app.Activity
 import android.app.PendingIntent
@@ -18,10 +18,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.specknet.pdiotapp.R
-import com.specknet.pdiotapp.barcode.BarcodeActivity
-import com.specknet.pdiotapp.utils.Constants
-import com.specknet.pdiotapp.utils.Utils
+import com.example.activityapp.R
+import com.example.activityapp.barcode.BarcodeActivity
+import com.example.activityapp.utils.Constants
+import com.example.activityapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_connecting.*
 import java.util.*
 import kotlin.experimental.and
