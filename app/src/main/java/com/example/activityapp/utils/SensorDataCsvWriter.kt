@@ -1,4 +1,4 @@
-package com.specknet.pdiotapp.utils
+package com.example.activityapp.utils
 
 import android.content.Context
 import android.util.Log
