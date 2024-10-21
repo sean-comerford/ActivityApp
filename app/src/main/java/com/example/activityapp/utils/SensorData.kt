@@ -1,4 +1,4 @@
-package com.specknet.pdiotapp.utils
+package com.example.activityapp.utils
 
 import java.io.Serializable
 

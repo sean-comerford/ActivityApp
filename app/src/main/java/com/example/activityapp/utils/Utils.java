@@ -4,8 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.specknet.pdiotapp.bluetooth.BluetoothSpeckService;
-import com.specknet.pdiotapp.utils.Constants;
+import com.example.activityapp.bluetooth.BluetoothSpeckService;
+import com.example.activityapp.utils.Constants;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
