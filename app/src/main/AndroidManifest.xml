@@ -83,10 +83,6 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RecordingActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
