@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     // buttons and textviews
     lateinit var liveProcessingButton: Button
     lateinit var pairingButton: Button
-    lateinit var recordButton: Button
 
     // permissions
     lateinit var permissionAlertDialog: AlertDialog.Builder
@@ -63,9 +62,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(introIntent)
         }
 
-        liveProcessingButton = findViewById(R.id.live_button)
+        liveProcessingButton = findViewById(R.id.activity_button)
         pairingButton = findViewById(R.id.ble_button)
-        recordButton = findViewById(R.id.record_button)
 
         permissionAlertDialog = AlertDialog.Builder(this)
 
@@ -91,12 +89,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ConnectingActivity::class.java)
             startActivity(intent)
         }
-
-        recordButton.setOnClickListener {
-            val intent = Intent(this, RecordingActivity::class.java)
-            startActivity(intent)
-        }
     }
+
 
     fun setupPermissions() {
         // BLE permissions
@@ -268,7 +262,7 @@ class MainActivity : AppCompatActivity() {
                 snackbar = Snackbar
                     .make(
                         coordinatorLayout,
-                        "Storage permission needed to record sensor.",
+                        "Storage permission needed to record activity data.",
                         Snackbar.LENGTH_LONG
                     )
             }
