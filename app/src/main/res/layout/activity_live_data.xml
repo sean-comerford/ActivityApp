@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/classification_result"
-        app:layout_constraintBottom_toTopOf="@id/respeck_graphs"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/respeck_graphs">
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,7 +45,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/respeck_graphs"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/classification_result"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/thingy_graphs">
@@ -82,10 +83,6 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
 
-
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
