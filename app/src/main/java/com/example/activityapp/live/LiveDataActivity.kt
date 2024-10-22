@@ -21,6 +21,8 @@ import com.example.activityapp.utils.Constants
 import com.example.activityapp.utils.RESpeckLiveData
 import com.example.activityapp.utils.ThingyLiveData
 import kotlin.collections.ArrayList
+import android.widget.TextView
+
 
 
 class LiveDataActivity : AppCompatActivity() {
@@ -79,6 +81,13 @@ class LiveDataActivity : AppCompatActivity() {
                     time += 1
                     updateGraph("respeck", x, y, z)
 
+                    // Classify activity based on the accelerometer data
+                    val activity = classifyActivity(x, y, z)
+
+                    runOnUiThread {
+                        val classificationTextView: TextView = findViewById(R.id.activity_classification)
+                        classificationTextView.text = activity
+                    }
                 }
             }
         }
@@ -112,6 +121,14 @@ class LiveDataActivity : AppCompatActivity() {
                     time += 1
                     updateGraph("thingy", x, y, z)
 
+                    // Classify activity based on the accelerometer data
+                    val activity = classifyActivity(x, y, z)
+
+                    // Update the classification TextView on the UI thread
+                    runOnUiThread {
+                        val classificationTextView: TextView = findViewById(R.id.activity_classification)
+                        classificationTextView.text = activity
+                    }
                 }
             }
         }
@@ -257,4 +274,20 @@ class LiveDataActivity : AppCompatActivity() {
         looperRespeck.quit()
         looperThingy.quit()
     }
+
+    fun classifyActivity(x: Float, y: Float, z: Float): String {
+        // Calculate the magnitude of the acceleration vector
+        val magnitude = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+
+        // Set a threshold for determining movement
+        val threshold = 0.2f
+
+        // Classify based on the magnitude of the acceleration
+        return if (magnitude < threshold) {
+            "Standing"
+        } else {
+            "Walking"
+        }
+    }
+
 }
