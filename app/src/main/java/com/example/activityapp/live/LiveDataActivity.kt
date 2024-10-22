@@ -280,7 +280,7 @@ class LiveDataActivity : AppCompatActivity() {
         val magnitude = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
 
         // Set a threshold for determining movement
-        val threshold = 1f
+        val threshold = 1.5f
 
         // Classify based on the magnitude of the acceleration
         return if (magnitude < threshold) {
