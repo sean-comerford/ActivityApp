@@ -14,3 +14,14 @@
 .cxx
 local.properties
 /PDIoT2324/
+/activity_model_fold_1.tflite
+/activity_model_fold_2.tflite
+/activity_model_fold_3.tflite
+/activity_model_fold_4.tflite
+/activity_model_fold_5.tflite
+/social_signal_model_fold_1.tflite
+/social_signal_model_fold_2.tflite
+/social_signal_model_fold_3.tflite
+/social_signal_model_fold_4.tflite
+/social_signal_model_fold_5.tflite
+/Testing activity model.ipynb
