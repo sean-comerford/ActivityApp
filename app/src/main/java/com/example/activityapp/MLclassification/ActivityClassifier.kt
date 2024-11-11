@@ -13,9 +13,14 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
     private val buffer = mutableListOf<FloatArray>()
 
     init {
-        val modelFile = loadModelFile(context.assets, "activity_model.tflite")
-        interpreter = Interpreter(modelFile)
+        try {
+            val modelFile = loadModelFile(context.assets, "activity_model.tflite")
+            interpreter = Interpreter(modelFile)
+        } catch (e: Exception) {
+            throw RuntimeException("Error initializing TensorFlow Lite interpreter: ${e.message}")
+        }
     }
+
 
     // Load tflite model from assets and return it as MappedByteBuffer.
     // AssetManager: Allows access to app assets (i.e. non-code files like model files)
