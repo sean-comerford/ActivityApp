@@ -27,12 +27,15 @@ android {
         unitTests.includeAndroidResources = true
     }
 
+    androidResources {
+        noCompress 'tflite'  // Ensures that .tflite files are not compressed
+    }
+
     packagingOptions {
         resources {
             excludes.add("META-INF/LICENSE*")
             excludes.add("META-INF/NOTICE*")
         }
-        noCompress += ["tflite"]
     }
 }
 
