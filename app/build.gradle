@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -22,17 +23,13 @@ android {
         }
     }
 
+
     testOptions {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
-
-    packagingOptions {
-        resources {
-            excludes.add("META-INF/LICENSE*")
-            excludes.add("META-INF/NOTICE*")
-        }
-        noCompress += ["tflite"]
+    androidResources {
+        noCompress 'tflite'
     }
 }
 
@@ -56,9 +53,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:19.0.0'
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.11.0'
     implementation 'com.google.android.material:material:1.2.0'
+
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'io.reactivex:rxjava:1.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     implementation 'org.apache.commons:commons-lang3:3.7'
+
+
+
+
     implementation 'org.tensorflow:tensorflow-lite:2.8.0'
+
 }
