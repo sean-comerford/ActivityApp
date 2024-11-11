@@ -11,7 +11,7 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 300) { 
     private val buffer = mutableListOf<FloatArray>()
 
     init {
-        val modelFile = loadModelFile(context.assets, "activity_model.tflite")
+        val modelFile = loadModelFile(context.assets, "activity_model_2.tflite")
         interpreter = Interpreter(modelFile)
     }
 
