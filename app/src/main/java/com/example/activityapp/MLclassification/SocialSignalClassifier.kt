@@ -1,5 +1,4 @@
 package com.example.activityapp.MLclassification
-
 import android.content.Context
 import android.content.res.AssetManager
 import org.tensorflow.lite.Interpreter
@@ -34,21 +33,25 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 300
     }
 
     private fun classify(): String {
-
-
-        // Manually flatten the buffer
-        val input = FloatArray(buffer.size * 3) // Assuming each FloatArray in buffer has 3 elements (x, y, z)
-        var index = 0
-        for (array in buffer) {
-            for (value in array) {
-                input[index++] = value
-            }
+        if (buffer.any { it.size != 3 }) {
+            throw IllegalArgumentException("Each entry in buffer must contain exactly 3 elements (x, y, z).")
         }
 
-        val output = Array(1) { FloatArray(4) }  // Adjust based on model output classes
+        // Input is 2D array. Each row is a collection of x, y and z values
+        val input = Array(buffer.size) { i -> buffer[i] }
+
+        // Stores output predictions of model. Stores model's confidence score for each class
+        val output = Array(1) { FloatArray(11) }
+
+        // Run inference
         interpreter.run(input, output)
-        val signalIndex = output[0].withIndex().maxByOrNull { it.value }?.index ?: -1
-        return when (signalIndex) {
+
+        // Finds max value in output[0] and returns corresponding index. This index represents the predicted activity class
+        // If no maximum is found, defaults to -1 (indicates unknown result)
+        val activityIndex = output[0].withIndex().maxByOrNull { it.value }?.index ?: -1
+
+        // Map index to activity Name
+        return when (activityIndex) {
             0 -> "breathingNormal"
             1 -> "coughing"
             2 -> "hyperventilating"
