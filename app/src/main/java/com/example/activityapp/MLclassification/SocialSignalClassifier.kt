@@ -26,7 +26,7 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 200
         buffer.add(floatArrayOf(x, y, z))
         if (buffer.size == windowSize) {
             val result = classify()
-            buffer.removeAt(0)  // Keep buffer size constant
+            buffer.subList(0, 25).clear()  // Determine how often a classification should be made
             return result
         }
         return null

@@ -5,6 +5,7 @@ import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import android.util.Log
 
 class ActivityClassifier(context: Context, private val windowSize: Int = 250) { /// CHANGE WINDOW SIZE
     // Loads activity_model.tflite and performs inference
@@ -41,14 +42,17 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
         // Adds the new accelerometer data (x, y and z) to the buffer as a Float array containing these values.
         // Adds a single set of three values (x, y and z) to the buffer
         buffer.add(floatArrayOf(x, y, z))
+        Log.d("ActivityClassifier", "Buffer size is ${buffer.size}")
         // Check if buffer has reached or exceeded the specified windowSize
         // WindowSize defines how many data points are needed before classification can occur
         if (buffer.size == windowSize) {
             // classify() function called and returns a String representing and activity
             val result = classify()
+            Log.d("ActivityClassifier", "Buffer size ${buffer.size} is now the same as window size ${windowSize}. Making classification")
             // Removes the oldest data point from buffer to keep the list size constant
             // Could reduce computational load by increasing the number of data points removed
-            buffer.removeAt(0)  // Keep buffer size constant
+            buffer.subList(0, 25).clear() // Determine how often a classification should be made
+            Log.d("ActivityClassifier", "Removing elements from buffer, buffer size is now ${buffer.size}")
             // Return the classification result.
             return result
         }
