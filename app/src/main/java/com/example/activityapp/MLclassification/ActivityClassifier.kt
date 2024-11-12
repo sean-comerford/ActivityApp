@@ -13,6 +13,11 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
     // Creates empty list of FloatArray elements. Each FloatArray element holds the x, y and z values of sensor readings
     private val buffer = mutableListOf<FloatArray>()
 
+    // Define period (seconds) between classification results
+    private val classification_period = 1
+    // This will be the amount of buffer readings removed after every classification is made
+    private val bufferReadingsToRemove = classification_period * 25
+
     init {
         try {
             val modelFile = loadModelFile(context.assets, "activity_model_2.tflite")
@@ -51,7 +56,7 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
             Log.d("ActivityClassifier", "Buffer size ${buffer.size} is now the same as window size ${windowSize}. Making classification")
             // Removes the oldest data point from buffer to keep the list size constant
             // Could reduce computational load by increasing the number of data points removed
-            buffer.subList(0, 25).clear() // Determine how often a classification should be made
+            buffer.subList(0, bufferReadingsToRemove).clear() // Determine how often a classification should be made
             Log.d("ActivityClassifier", "Removing elements from buffer, buffer size is now ${buffer.size}")
             // Return the classification result.
             return result

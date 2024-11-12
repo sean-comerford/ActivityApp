@@ -10,6 +10,11 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 200
     private val interpreter: Interpreter
     private val buffer = mutableListOf<FloatArray>()
 
+    // Define period (seconds) between classification results
+    private val classification_period = 1
+    // This will be the amount of buffer readings removed after every classification is made
+    private val bufferReadingsToRemove = classification_period * 25
+
     init {
         val modelFile = loadModelFile(context.assets, "social_signal_model_2.tflite")
         interpreter = Interpreter(modelFile)
@@ -26,7 +31,7 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 200
         buffer.add(floatArrayOf(x, y, z))
         if (buffer.size == windowSize) {
             val result = classify()
-            buffer.subList(0, 25).clear()  // Determine how often a classification should be made
+            buffer.subList(0, bufferReadingsToRemove).clear()  // Determine how often a classification should be made
             return result
         }
         return null
