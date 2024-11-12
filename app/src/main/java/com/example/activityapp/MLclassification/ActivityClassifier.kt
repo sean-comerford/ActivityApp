@@ -14,7 +14,7 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
 
     init {
         try {
-            val modelFile = loadModelFile(context.assets, "activity_model.tflite")
+            val modelFile = loadModelFile(context.assets, "activity_model_2.tflite")
             interpreter = Interpreter(modelFile)
         } catch (e: Exception) {
             throw RuntimeException("Error initializing TensorFlow Lite interpreter: ${e.message}")
