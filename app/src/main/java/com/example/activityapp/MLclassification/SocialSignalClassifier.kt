@@ -6,7 +6,7 @@ import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
-class SocialSignalClassifier(context: Context, private val windowSize: Int = 300) {
+class SocialSignalClassifier(context: Context, private val windowSize: Int = 200 ) {
     private val interpreter: Interpreter
     private val buffer = mutableListOf<FloatArray>()
 
@@ -24,7 +24,7 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 300
 
     fun addSensorData(x: Float, y: Float, z: Float): String? {
         buffer.add(floatArrayOf(x, y, z))
-        if (buffer.size >= windowSize) {
+        if (buffer.size == windowSize) {
             val result = classify()
             buffer.removeAt(0)  // Keep buffer size constant
             return result
@@ -38,10 +38,10 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 300
         }
 
         // Input is 2D array. Each row is a collection of x, y and z values
-        val input = Array(buffer.size) { i -> buffer[i] }
+        val input = Array(1){Array(buffer.size) { i -> buffer[i] }}
 
         // Stores output predictions of model. Stores model's confidence score for each class
-        val output = Array(1) { FloatArray(11) }
+        val output = Array(1) { FloatArray(4) }
 
         // Run inference
         interpreter.run(input, output)
