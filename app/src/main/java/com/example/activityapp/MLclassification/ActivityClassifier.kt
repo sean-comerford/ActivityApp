@@ -39,11 +39,11 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
     // String? = Function returns nullable string, may be string or null (if theres not enough data to classify yet)
     fun addSensorData(x: Float, y: Float, z: Float): String? {
         // Adds the new accelerometer data (x, y and z) to the buffer as a Float array containing these values.
-        // Adds a single set of three vaules (x, y and z) to the buffer
+        // Adds a single set of three values (x, y and z) to the buffer
         buffer.add(floatArrayOf(x, y, z))
         // Check if buffer has reached or exceeded the specified windowSize
         // WindowSize defines how many data points are needed before classification can occur
-        if (buffer.size >= windowSize) {
+        if (buffer.size == windowSize) {
             // classify() function called and returns a String representing and activity
             val result = classify()
             // Removes the oldest data point from buffer to keep the list size constant
@@ -61,7 +61,7 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
         }
 
         // Input is 2D array. Each row is a collection of x, y and z values
-        val input = Array(buffer.size) { i -> buffer[i] }
+        val input = Array(1) {Array(buffer.size) { i -> buffer[i] }}
 
         // Stores output predictions of model. Stores model's confidence score for each class
         val output = Array(1) { FloatArray(11) }
