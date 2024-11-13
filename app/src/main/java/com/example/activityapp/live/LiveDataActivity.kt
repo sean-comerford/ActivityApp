@@ -66,6 +66,10 @@ class LiveDataActivity : AppCompatActivity() {
     private lateinit var activityClassifier: ActivityClassifier
     private lateinit var socialSignalClassifier: SocialSignalClassifier
 
+    // For storing latest classification results
+    private var lastActivity: String? = null
+    private var lastSocialSignal: String? = null
+
     // Initialises UI elements, chart of live data and classifiers
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,13 @@ class LiveDataActivity : AppCompatActivity() {
 
 
         setupCharts()
+
+        // Set initial classification results to "Processing"
+        val activityTextView: TextView = findViewById(R.id.activity_classification)
+        activityTextView.text = "Processing..."
+
+        val socialSignalTextView: TextView = findViewById(R.id.social_signal_classification)
+        socialSignalTextView.text = "Processing..."
 
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
@@ -108,19 +119,24 @@ class LiveDataActivity : AppCompatActivity() {
                     //ADDED FOR ML
                     // Classify activity. Will be null until the buffer fills up
                     val activity = activityClassifier.addSensorData(x, y, z)
+                    // Update the latest classification result if it is different to the last one
+                    if (activity != null && activity != lastActivity) {
+                        lastActivity = activity
+                        runOnUiThread{
+                            val activityTextView: TextView = findViewById(R.id.activity_classification)
+                            activityTextView.text = activity
+                        }
+                    }
 
                     // Classify social signal. Will be null until buffer fills up
                     val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
-
-                    runOnUiThread {
-                        // Update Activity Classification TextView in layout.xml
-                        val activityTextView: TextView = findViewById(R.id.activity_classification)
-                        // If activity is not full, activityTextView.text will show the classification label
-                        activityTextView.text = activity ?: "Processing..."
-
-                        // Update Social Signal Classification TextView
-                        val socialSignalTextView: TextView = findViewById(R.id.social_signal_classification)
-                        socialSignalTextView.text = socialSignal ?: "Processing..."
+                    // Update the latest classification result if it is different to the last one
+                    if (socialSignal != null && socialSignal != lastSocialSignal) {
+                        lastSocialSignal = socialSignal
+                        runOnUiThread{
+                            val socialSignalTextView: TextView = findViewById(R.id.social_signal_classification)
+                            socialSignalTextView.text = socialSignal
+                        }
                     }
                 }
             }
