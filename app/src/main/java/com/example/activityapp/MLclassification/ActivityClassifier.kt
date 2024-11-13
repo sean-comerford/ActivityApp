@@ -19,7 +19,7 @@ class ActivityClassifier(context: Context, private val activityLogger: ActivityL
     private val buffer = mutableListOf<FloatArray>()
 
     // Define period (seconds) between classification results
-    private val classification_period = 1
+    private val classification_period = 2
     // This will be the amount of buffer readings removed after every classification is made
     private val bufferReadingsToRemove = classification_period * 25
 

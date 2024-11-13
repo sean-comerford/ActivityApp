@@ -4,6 +4,7 @@ package com.example.activityapp.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+// Define the table "daily_social_signal_log" in the database
 @Entity(tableName = "daily_social_signal_log")
 data class DailySocialSignalLog(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

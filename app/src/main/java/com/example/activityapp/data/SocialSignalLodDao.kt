@@ -3,6 +3,7 @@ package com.example.activityapp.data
 
 import androidx.room.*
 
+// Define the Data access object for the social signal table
 @Dao
 interface SocialSignalLogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

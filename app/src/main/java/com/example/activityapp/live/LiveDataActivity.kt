@@ -56,6 +56,7 @@ class LiveDataActivity : AppCompatActivity() {
     private lateinit var activityClassifier: ActivityClassifier
     private lateinit var socialSignalClassifier: SocialSignalClassifier
 
+    // Define the Database and the Logger
     private lateinit var appDatabase: AppDatabase
     private lateinit var activityLogger: ActivityLogger
 
