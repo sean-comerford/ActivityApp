@@ -22,15 +22,17 @@ import com.example.activityapp.utils.RESpeckLiveData
 import com.example.activityapp.utils.ThingyLiveData
 import kotlin.collections.ArrayList
 import android.widget.TextView
+import androidx.room.Room
+import com.example.activityapp.data.AppDatabase
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-
-//ADDED FOR ML
+// ADDED FOR ML
 import com.example.activityapp.MLclassification.ActivityClassifier
 import com.example.activityapp.MLclassification.SocialSignalClassifier
-
-
-
-
+import com.example.activityapp.logging.ActivityLogger
 
 class LiveDataActivity : AppCompatActivity() {
 
@@ -39,32 +41,23 @@ class LiveDataActivity : AppCompatActivity() {
     lateinit var dataSet_res_accel_y: LineDataSet
     lateinit var dataSet_res_accel_z: LineDataSet
 
-    //lateinit var dataSet_thingy_accel_x: LineDataSet
-    //lateinit var dataSet_thingy_accel_y: LineDataSet
-    //lateinit var dataSet_thingy_accel_z: LineDataSet
-
     var time = 0f
     lateinit var allRespeckData: LineData
 
-    //lateinit var allThingyData: LineData
-
-
     lateinit var respeckChart: LineChart
-    //lateinit var thingyChart: LineChart
 
     // global broadcast receiver so we can unregister it
-    // Listens for live data broadcasts from Respeck
     lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
-    //lateinit var thingyLiveUpdateReceiver: BroadcastReceiver
     lateinit var looperRespeck: Looper
-    //lateinit var looperThingy: Looper
 
     val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
-    //val filterTestThingy = IntentFilter(Constants.ACTION_THINGY_BROADCAST)
 
-    //ADDED FOR ML
+    // ADDED FOR ML
     private lateinit var activityClassifier: ActivityClassifier
     private lateinit var socialSignalClassifier: SocialSignalClassifier
+
+    private lateinit var appDatabase: AppDatabase
+    private lateinit var activityLogger: ActivityLogger
 
     // For storing latest classification results
     private var lastActivity: String? = null
@@ -73,13 +66,21 @@ class LiveDataActivity : AppCompatActivity() {
     // Initialises UI elements, chart of live data and classifiers
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Use activity_live_data.xml in the layout directory as its layout
         setContentView(R.layout.activity_live_data)
 
-        // Initialize classifiers //ADDED FOR ML
-        activityClassifier = ActivityClassifier(this)
-        socialSignalClassifier = SocialSignalClassifier(this)
+        // Initialize the database
+        appDatabase = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "activity_app_db"
+        ).build()
 
+        // Initialize the logger with the database
+        activityLogger = ActivityLogger(appDatabase)
+
+        // Initialize classifiers
+        activityClassifier = ActivityClassifier(this, activityLogger)
+        socialSignalClassifier = SocialSignalClassifier(this, activityLogger)
 
         setupCharts()
 
@@ -93,16 +94,14 @@ class LiveDataActivity : AppCompatActivity() {
         // set up the broadcast receiver
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-
                 Log.i("thread", "I am running on thread = " + Thread.currentThread().name)
 
                 val action = intent.action
 
                 if (action == Constants.ACTION_RESPECK_LIVE_BROADCAST) {
-
                     val liveData =
                         intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
-                    Log.d("Live", "onReceive: liveData = " + liveData)
+                    Log.d("Live", "onReceive: liveData = $liveData")
 
                     // get all relevant intent contents
                     val x = liveData.accelX
@@ -113,28 +112,21 @@ class LiveDataActivity : AppCompatActivity() {
                     updateGraph("respeck", x, y, z)
 
                     // Classify activity based on the accelerometer data
-                    //val activity = classifyActivity(x, y, z)
-
-
-                    //ADDED FOR ML
-                    // Classify activity. Will be null until the buffer fills up
                     val activity = activityClassifier.addSensorData(x, y, z)
-                    // Update the latest classification result if it is different to the last one
+                    // Update the latest classification result if it is different from the last one
                     if (activity != null && activity != lastActivity) {
                         lastActivity = activity
-                        runOnUiThread{
-                            val activityTextView: TextView = findViewById(R.id.activity_classification)
+                        runOnUiThread {
                             activityTextView.text = activity
                         }
                     }
 
                     // Classify social signal. Will be null until buffer fills up
                     val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
-                    // Update the latest classification result if it is different to the last one
+                    // Update the latest classification result if it is different from the last one
                     if (socialSignal != null && socialSignal != lastSocialSignal) {
                         lastSocialSignal = socialSignal
-                        runOnUiThread{
-                            val socialSignalTextView: TextView = findViewById(R.id.social_signal_classification)
+                        runOnUiThread {
                             socialSignalTextView.text = socialSignal
                         }
                     }
@@ -148,11 +140,10 @@ class LiveDataActivity : AppCompatActivity() {
         looperRespeck = handlerThreadRespeck.looper
         val handlerRespeck = Handler(looperRespeck)
         this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
-
     }
 
     // Initialises the chart for the Respeck
-    fun setupCharts() {
+    private fun setupCharts() {
         respeckChart = findViewById(R.id.respeck_chart)
 
         // Respeck
@@ -196,12 +187,9 @@ class LiveDataActivity : AppCompatActivity() {
         allRespeckData = LineData(dataSetsRes)
         respeckChart.data = allRespeckData
         respeckChart.invalidate()
-
     }
 
-    fun updateGraph(graph: String, x: Float, y: Float, z: Float) {
-        // take the first element from the queue
-        // and update the graph with it
+    private fun updateGraph(graph: String, x: Float, y: Float, z: Float) {
         if (graph == "respeck") {
             dataSet_res_accel_x.addEntry(Entry(time, x))
             dataSet_res_accel_y.addEntry(Entry(time, y))
@@ -217,17 +205,14 @@ class LiveDataActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(respeckLiveUpdateReceiver)
         looperRespeck.quit()
     }
 
-
-    //ADDED FOR ML
+    // ADDED FOR ML
     private fun handleSensorData(x: Float, y: Float, z: Float) {
-        // Classify activity
         val activity = activityClassifier.addSensorData(x, y, z)
         if (activity != null) {
             runOnUiThread {
@@ -235,7 +220,6 @@ class LiveDataActivity : AppCompatActivity() {
             }
         }
 
-        // Classify social signal
         val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
         if (socialSignal != null) {
             runOnUiThread {
@@ -243,7 +227,4 @@ class LiveDataActivity : AppCompatActivity() {
             }
         }
     }
-
-
-
 }

@@ -1,13 +1,18 @@
 package com.example.activityapp.MLclassification
+
 import android.content.Context
 import android.content.res.AssetManager
+import android.util.Log
+import com.example.activityapp.logging.ActivityLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import android.util.Log
 
-class ActivityClassifier(context: Context, private val windowSize: Int = 250) { /// CHANGE WINDOW SIZE
+class ActivityClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 250) { /// CHANGE WINDOW SIZE
     // Loads activity_model.tflite and performs inference
     private val interpreter: Interpreter
     // Creates empty list of FloatArray elements. Each FloatArray element holds the x, y and z values of sensor readings
@@ -17,6 +22,8 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
     private val classification_period = 1
     // This will be the amount of buffer readings removed after every classification is made
     private val bufferReadingsToRemove = classification_period * 25
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     init {
         try {
@@ -59,6 +66,11 @@ class ActivityClassifier(context: Context, private val windowSize: Int = 250) { 
             buffer.subList(0, bufferReadingsToRemove).clear() // Determine how often a classification should be made
             Log.d("ActivityClassifier", "Removing elements from buffer, buffer size is now ${buffer.size}")
             // Return the classification result.
+            result?.let {
+                scope.launch {
+                    activityLogger.logActivity(it, durationInSeconds = classification_period)
+                }
+            }
             return result
         }
         return null
