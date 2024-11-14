@@ -1,4 +1,3 @@
-// File: ActivityLogger.kt
 package com.example.activityapp.logging
 
 import com.example.activityapp.data.*

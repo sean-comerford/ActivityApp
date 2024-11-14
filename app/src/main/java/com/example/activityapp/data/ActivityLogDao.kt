@@ -1,4 +1,3 @@
-// File: ActivityLogDao.kt
 package com.example.activityapp.data
 
 import androidx.room.*
@@ -17,6 +16,18 @@ interface ActivityLogDao {
     @Query("SELECT * FROM daily_activity_log WHERE date = :date")
     suspend fun getLogsForDate(date: String): List<DailyActivityLog>
 
-    @Query("DELETE FROM daily_activity_log WHERE date < :retentionDate")
-    suspend fun deleteOldLogs(retentionDate: String)
+    // Method to get the total count of entries
+    @Query("SELECT COUNT(*) FROM daily_activity_log")
+    suspend fun getCount(): Int
+
+    // Method to delete the oldest half of the entries
+    @Query("""
+        DELETE FROM daily_activity_log 
+        WHERE id IN (
+            SELECT id FROM daily_activity_log 
+            ORDER BY date ASC 
+            LIMIT :halfCount
+        )
+    """)
+    suspend fun deleteOldestHalf(halfCount: Int)
 }

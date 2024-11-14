@@ -1,4 +1,3 @@
-// File: SocialSignalLogDao.kt
 package com.example.activityapp.data
 
 import androidx.room.*
@@ -15,6 +14,16 @@ interface SocialSignalLogDao {
     @Query("SELECT * FROM daily_social_signal_log WHERE date = :date")
     suspend fun getLogsForDate(date: String): List<DailySocialSignalLog>
 
-    @Query("DELETE FROM daily_social_signal_log WHERE date < :retentionDate")
-    suspend fun deleteOldLogs(retentionDate: String)
+    @Query("SELECT COUNT(*) FROM daily_social_signal_log")
+    suspend fun getCount(): Int
+
+    @Query("""
+        DELETE FROM daily_social_signal_log 
+        WHERE id IN (
+            SELECT id FROM daily_social_signal_log 
+            ORDER BY date ASC 
+            LIMIT :halfCount
+        )
+    """)
+    suspend fun deleteOldestHalf(halfCount: Int)
 }

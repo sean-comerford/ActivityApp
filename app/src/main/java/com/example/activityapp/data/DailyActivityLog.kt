@@ -1,4 +1,3 @@
-// File: DailyActivityLog.kt
 package com.example.activityapp.data
 
 import androidx.room.Entity

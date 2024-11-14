@@ -1,4 +1,3 @@
-// File: DataCleanupWorker.kt
 package com.example.activityapp.workers
 
 import android.content.Context
@@ -8,31 +7,35 @@ import java.util.Calendar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit // Import for TimeUnit
+import android.util.Log
 
+// Defines background worker that periodically deletes files older than 30 days from the database.
+// Coroutine subclass, designed to run in the background
 class DataCleanupWorker(context: Context, workerParams: WorkerParameters) : CoroutineWorker(context, workerParams) {
-    private val db = AppDatabase.getInstance(context) // Add getInstance() if you need a singleton
+    // Get the singleton instance of the database
+    // Singleton instance: Only one instance of the class can exist in the application
+    private val db = AppDatabase.getInstance(context)
 
     override suspend fun doWork(): Result {
-        val retentionDate = getRetentionDate()
-        db.activityLogDao().deleteOldLogs(retentionDate)
-        db.socialSignalLogDao().deleteOldLogs(retentionDate)
-        return Result.success()
-    }
+        Log.d("ActivityLogger", "Data cleanup has started at ${System.currentTimeMillis()}")
+        try {
+            // Calculate half of the entries for Activity Log
+            val activityCount = db.activityLogDao().getCount()
+            val activityHalfCount = activityCount / 2
+            db.activityLogDao().deleteOldestHalf(activityHalfCount)
 
-    private fun getRetentionDate(): String {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, -30)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.format(calendar.time)
-    }
-}
+            // Calculate half of the entries for Social Signal Log
+            val socialSignalCount = db.socialSignalLogDao().getCount()
+            val socialSignalHalfCount = socialSignalCount / 2
+            db.socialSignalLogDao().deleteOldestHalf(socialSignalHalfCount)
 
-// Scheduling the cleanup
-fun scheduleDataCleanup(context: Context) {
-    val dataCleanupRequest = PeriodicWorkRequestBuilder<DataCleanupWorker>(1, TimeUnit.DAYS).build()
-    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-        "data_cleanup",
-        ExistingPeriodicWorkPolicy.KEEP,
-        dataCleanupRequest
-    )
+            Log.d("ActivityLogger", "Data cleanup has been performed at ${System.currentTimeMillis()}")
+
+            return Result.success()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.d("ActivityLogger", "Data cleanup failed: ${e.message}")
+            return Result.failure()
+        }
+    }
 }

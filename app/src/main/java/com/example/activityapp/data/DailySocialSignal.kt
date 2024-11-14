@@ -1,4 +1,3 @@
-// File: DailySocialSignalLog.kt
 package com.example.activityapp.data
 
 import androidx.room.Entity
