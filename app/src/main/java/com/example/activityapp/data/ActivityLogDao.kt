@@ -20,6 +20,10 @@ interface ActivityLogDao {
     @Query("SELECT COUNT(*) FROM daily_activity_log")
     suspend fun getCount(): Int
 
+
+    @Query("SELECT * FROM daily_activity_log")
+    suspend fun getAllLogs(): List<DailyActivityLog>
+
     // Method to delete the oldest half of the entries
     @Query("""
         DELETE FROM daily_activity_log 

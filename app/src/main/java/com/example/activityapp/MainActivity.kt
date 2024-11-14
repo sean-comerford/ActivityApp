@@ -24,12 +24,15 @@ import com.example.activityapp.utils.Constants
 import com.example.activityapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 
+import com.example.activityapp.logging.LogViewActivity
+
+
 class MainActivity : AppCompatActivity() {
 
     // buttons and textviews
     lateinit var liveProcessingButton: Button
     lateinit var pairingButton: Button
-
+    lateinit var viewLogsButton: Button //added for history
     // permissions
     lateinit var permissionAlertDialog: AlertDialog.Builder
 
@@ -64,6 +67,8 @@ class MainActivity : AppCompatActivity() {
 
         liveProcessingButton = findViewById(R.id.activity_button)
         pairingButton = findViewById(R.id.ble_button)
+        viewLogsButton = findViewById(R.id.view_logs_button)
+
 
         permissionAlertDialog = AlertDialog.Builder(this)
 
@@ -80,6 +85,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupClickListeners() {
+
+
+        viewLogsButton.setOnClickListener {
+            startActivity(Intent(this, LogViewActivity::class.java))
+            startActivity(intent)
+        }
+
+
+
         liveProcessingButton.setOnClickListener {
             val intent = Intent(this, LiveDataActivity::class.java)
             startActivity(intent)

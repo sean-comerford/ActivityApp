@@ -17,6 +17,16 @@ interface SocialSignalLogDao {
     @Query("SELECT COUNT(*) FROM daily_social_signal_log")
     suspend fun getCount(): Int
 
+
+
+    @Query("SELECT * FROM daily_social_signal_log")
+    suspend fun getAllLogs(): List<DailySocialSignalLog>
+
+
+
+
+
+
     @Query("""
         DELETE FROM daily_social_signal_log 
         WHERE id IN (

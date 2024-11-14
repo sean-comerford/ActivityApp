@@ -32,7 +32,15 @@
         <service
             android:name=".bluetooth.BluetoothSpeckService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+
+        </service>
+
+        <activity
+            android:name=".logging.LogViewActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
 
         <activity
             android:exported="true"

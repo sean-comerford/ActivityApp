@@ -20,12 +20,17 @@ class ActivityLogger(private val db: AppDatabase) {
         if (existingLog != null) {
             val updatedLog = existingLog.copy(durationInSeconds = existingLog.durationInSeconds + durationInSeconds)
             activityLogDao.insertOrUpdate(updatedLog)
+            Log.d("ActivityLogger", "Updated activity log: $updatedLog")
             Log.d("ActivityLogger", "Updated activity log: Date: $date, Activity: $activityType, New Duration: ${updatedLog.durationInSeconds} seconds")
         } else {
             val newLog = DailyActivityLog(date = date, activityType = activityType, durationInSeconds = durationInSeconds)
             activityLogDao.insertOrUpdate(newLog)
+            Log.d("ActivityLogger", "New activity logged: $newLog")
             Log.d("ActivityLogger", "New activity logged: Date: $date, Activity: $activityType, Duration: $durationInSeconds seconds")
         }
+        // Log all entries to verify insertion
+        val allLogs = activityLogDao.getLogsForDate(date)
+        Log.d("ActivityLogger", "All activity logs for today: $allLogs")
     }
 
     suspend fun logSocialSignal(socialSignalType: String, durationInSeconds: Int) {
@@ -36,11 +41,11 @@ class ActivityLogger(private val db: AppDatabase) {
         if (existingLog != null) {
             val updatedLog = existingLog.copy(durationInSeconds = existingLog.durationInSeconds + durationInSeconds)
             socialSignalLogDao.insertOrUpdate(updatedLog)
-            //Log.d("ActivityLogger", "Updated social signal log: Date: $date, Social Signal: $socialSignalType, New Duration: ${updatedLog.durationInSeconds} seconds")
+            Log.d("ActivityLogger", "Updated social signal log: Date: $date, Social Signal: $socialSignalType, New Duration: ${updatedLog.durationInSeconds} seconds")
         } else {
             val newLog = DailySocialSignalLog(date = date, socialSignalType = socialSignalType, durationInSeconds = durationInSeconds)
             socialSignalLogDao.insertOrUpdate(newLog)
-            //Log.d("ActivityLogger", "New social signal logged: Date: $date, Activity: $socialSignalType, Duration: $durationInSeconds seconds")
+            Log.d("ActivityLogger", "New social signal logged: Date: $date, Activity: $socialSignalType, Duration: $durationInSeconds seconds")
         }
     }
 }
