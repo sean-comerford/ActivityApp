@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- To make app available to BLE-capable devices only -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -29,10 +29,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service
             android:name=".bluetooth.BluetoothSpeckService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <service
+            android:name=".services.ClassificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" /> <!-- Add this entry for ClassificationService -->
 
         <activity
             android:exported="true"
@@ -54,10 +61,12 @@
                 <action android:name="com.example.activityapp.RESPECK_BROADCAST" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".barcode.BarcodeActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:exported="true"
             android:name=".bluetooth.ConnectingActivity"
@@ -83,13 +92,13 @@
             android:name=".onboarding.OnBoardingActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
