@@ -1,23 +1,36 @@
 package com.example.activityapp.MLclassification
+
 import android.content.Context
 import android.content.res.AssetManager
+import android.util.Log
+import com.example.activityapp.logging.ActivityLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
-class SocialSignalClassifier(context: Context, private val windowSize: Int = 200 ) {
+class SocialSignalClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 200 ) {
     private val interpreter: Interpreter
     private val buffer = mutableListOf<FloatArray>()
+
 
     // Define period (seconds) between classification results
     private val classification_period = 1
     // This will be the amount of buffer readings removed after every classification is made
     private val bufferReadingsToRemove = classification_period * 25
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+
     init {
-        val modelFile = loadModelFile(context.assets, "social_signal_model_2.tflite")
-        interpreter = Interpreter(modelFile)
+        try {
+            val modelFile = loadModelFile(context.assets, "social_signal_model_2.tflite")
+            interpreter = Interpreter(modelFile)
+        } catch (e: Exception) {
+            throw RuntimeException("Error initializing TensorFlow Lite interpreter: ${e.message}")
+        }
     }
 
     private fun loadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
@@ -32,6 +45,11 @@ class SocialSignalClassifier(context: Context, private val windowSize: Int = 200
         if (buffer.size == windowSize) {
             val result = classify()
             buffer.subList(0, bufferReadingsToRemove).clear()  // Determine how often a classification should be made
+            result?.let {
+                scope.launch {
+                    activityLogger.logSocialSignal(it, durationInSeconds = classification_period)
+                }
+            }
             return result
         }
         return null
