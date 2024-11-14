@@ -22,6 +22,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/activity_button"/>
 
+        <Button
+            android:id="@+id/view_logs_button"
+            android:layout_width="550px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100px"
+            android:background="#03A9F4"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            android:text="View Activity Logs" />
+
+
+
 
         <Button
             android:id="@+id/activity_button"
@@ -33,7 +47,7 @@
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/view_logs_button"
             app:layout_constraintBottom_toTopOf="@+id/ble_button"/>
 
 
