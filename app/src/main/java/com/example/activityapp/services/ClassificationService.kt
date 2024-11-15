@@ -9,6 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -26,6 +28,10 @@ class ClassificationService : Service() {
     private lateinit var activityClassifier: ActivityClassifier
     private lateinit var socialSignalClassifier: SocialSignalClassifier
     private lateinit var activityLogger: ActivityLogger
+
+    // For storing latest classification results
+    private var lastActivity: String? = null
+    private var lastSocialSignal: String? = null
 
     // BroadcastReceiver to handle sensor data
     private val respeckReceiver = object : BroadcastReceiver() {
@@ -53,7 +59,7 @@ class ClassificationService : Service() {
 
         // Register the BroadcastReceiver to receive live data
         val filter = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
-        registerReceiver(respeckReceiver, filter, null, android.os.Handler(Looper.getMainLooper()))
+        registerReceiver(respeckReceiver, filter, null, Handler(Looper.getMainLooper()))
     }
 
     private fun startForegroundServiceWithNotification() {
@@ -82,15 +88,24 @@ class ClassificationService : Service() {
     private fun handleSensorData(x: Float, y: Float, z: Float) {
         // Classify activity
         val activity = activityClassifier.addSensorData(x, y, z)
-        if (activity != null) {
-            Log.d("ClassificationService", "Activity classified: $activity")
+        if (activity != null && activity != lastActivity) {
+            lastActivity = activity
+            broadcastClassificationResults(activity, lastSocialSignal)
         }
 
         // Classify social signal
         val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
-        if (socialSignal != null) {
-            Log.d("ClassificationService", "Social signal classified: $socialSignal")
+        if (socialSignal != null && socialSignal != lastSocialSignal) {
+            lastSocialSignal = socialSignal
+            broadcastClassificationResults(lastActivity, socialSignal)
         }
+    }
+
+    private fun broadcastClassificationResults(activity: String?, socialSignal: String?) {
+        val intent = Intent(Constants.ACTION_CLASSIFICATION_UPDATE)
+        intent.putExtra("activity", activity)
+        intent.putExtra("socialSignal", socialSignal)
+        sendBroadcast(intent)
     }
 
     override fun onDestroy() {
