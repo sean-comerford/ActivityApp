@@ -4,151 +4,130 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.activityapp.R
+import com.example.activityapp.services.ClassificationService
+import com.example.activityapp.utils.Constants
+import com.example.activityapp.utils.RESpeckLiveData
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.example.activityapp.R
-import com.example.activityapp.utils.Constants
-import com.example.activityapp.utils.RESpeckLiveData
-import com.example.activityapp.utils.ThingyLiveData
-import kotlin.collections.ArrayList
-import android.widget.TextView
-import androidx.room.Room
-import com.example.activityapp.data.AppDatabase
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-// ADDED FOR ML
-import com.example.activityapp.MLclassification.ActivityClassifier
-import com.example.activityapp.MLclassification.SocialSignalClassifier
-import com.example.activityapp.logging.ActivityLogger
 
 class LiveDataActivity : AppCompatActivity() {
 
-    // global graph variables
-    lateinit var dataSet_res_accel_x: LineDataSet
-    lateinit var dataSet_res_accel_y: LineDataSet
-    lateinit var dataSet_res_accel_z: LineDataSet
+    // Graph variables
+    private lateinit var dataSet_res_accel_x: LineDataSet
+    private lateinit var dataSet_res_accel_y: LineDataSet
+    private lateinit var dataSet_res_accel_z: LineDataSet
 
-    var time = 0f
-    lateinit var allRespeckData: LineData
+    private var time = 0f
+    private lateinit var allRespeckData: LineData
+    private lateinit var respeckChart: LineChart
 
-    lateinit var respeckChart: LineChart
+    // BroadcastReceiver for live data and classification results
+    private lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
+    private lateinit var classificationUpdateReceiver: BroadcastReceiver
+    private lateinit var looperRespeck: Looper
 
-    // global broadcast receiver so we can unregister it
-    lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
-    lateinit var looperRespeck: Looper
+    // Variables to track last classifications
+    private var lastActivityClassification: String? = null
+    private var lastSocialSignalClassification: String? = null
 
-    val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
+    // Intent filters
+    private val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
+    private val classificationFilter = IntentFilter(Constants.ACTION_CLASSIFICATION_UPDATE)
 
-    // ADDED FOR ML
-    private lateinit var activityClassifier: ActivityClassifier
-    private lateinit var socialSignalClassifier: SocialSignalClassifier
+    // UI Components
+    private lateinit var startClassificationButton: Button
+    private lateinit var stopClassificationButton: Button
+    private lateinit var activityTextView: TextView
+    private lateinit var socialSignalTextView: TextView
 
-    // Define the Database and the Logger
-    private lateinit var appDatabase: AppDatabase
-    private lateinit var activityLogger: ActivityLogger
-
-    // For storing latest classification results
-    private var lastActivity: String? = null
-    private var lastSocialSignal: String? = null
-
-    // Initialises UI elements, chart of live data and classifiers
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_live_data)
 
-        // Initialize the database
-        appDatabase = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "activity_app_db"
-        ).build()
+        // Initialize UI components
+        startClassificationButton = findViewById(R.id.start_classification_button)
+        stopClassificationButton = findViewById(R.id.stop_classification_button)
+        activityTextView = findViewById(R.id.activity_classification)
+        socialSignalTextView = findViewById(R.id.social_signal_classification)
+        respeckChart = findViewById(R.id.respeck_chart)
 
-        // Initialize the logger with the database
-        activityLogger = ActivityLogger(appDatabase)
-
-        // Initialize classifiers
-        activityClassifier = ActivityClassifier(this, activityLogger)
-        socialSignalClassifier = SocialSignalClassifier(this, activityLogger)
-
+        // Set up the chart
         setupCharts()
 
-        // Set initial classification results to "Processing"
-        val activityTextView: TextView = findViewById(R.id.activity_classification)
-        activityTextView.text = "Processing..."
+        // Set click listeners for classification control buttons
+        startClassificationButton.setOnClickListener {
+            startClassification()
+        }
 
-        val socialSignalTextView: TextView = findViewById(R.id.social_signal_classification)
-        socialSignalTextView.text = "Processing..."
+        stopClassificationButton.setOnClickListener {
+            stopClassification()
+        }
 
-        // set up the broadcast receiver
+        // Set up the BroadcastReceiver for live data
         respeckLiveUpdateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.i("thread", "I am running on thread = " + Thread.currentThread().name)
-
-                val action = intent.action
-
-                if (action == Constants.ACTION_RESPECK_LIVE_BROADCAST) {
+                if (intent.action == Constants.ACTION_RESPECK_LIVE_BROADCAST) {
                     val liveData =
                         intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
-                    Log.d("Live", "onReceive: liveData = $liveData")
 
-                    // get all relevant intent contents
+                    // Update graph with new sensor data
                     val x = liveData.accelX
                     val y = liveData.accelY
                     val z = liveData.accelZ
 
                     time += 1
                     updateGraph("respeck", x, y, z)
-
-                    // Classify activity based on the accelerometer data
-                    val activity = activityClassifier.addSensorData(x, y, z)
-                    // Update the latest classification result if it is different from the last one
-                    if (activity != null && activity != lastActivity) {
-                        lastActivity = activity
-                        runOnUiThread {
-                            activityTextView.text = activity
-                        }
-                    }
-
-                    // Classify social signal. Will be null until buffer fills up
-                    val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
-                    // Update the latest classification result if it is different from the last one
-                    if (socialSignal != null && socialSignal != lastSocialSignal) {
-                        lastSocialSignal = socialSignal
-                        runOnUiThread {
-                            socialSignalTextView.text = socialSignal
-                        }
-                    }
                 }
             }
         }
 
-        // register receiver on another thread
+        // Register the live data receiver on a background thread
         val handlerThreadRespeck = HandlerThread("bgThreadRespeckLive")
         handlerThreadRespeck.start()
         looperRespeck = handlerThreadRespeck.looper
         val handlerRespeck = Handler(looperRespeck)
-        this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
+        registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
+
+        // Set up the BroadcastReceiver for classification updates
+        classificationUpdateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == Constants.ACTION_CLASSIFICATION_UPDATE) {
+                    val activity = intent.getStringExtra(Constants.EXTRA_ACTIVITY_RESULT) ?: "Processing..."
+                    val socialSignal = intent.getStringExtra(Constants.EXTRA_SOCIAL_SIGNAL_RESULT) ?: "Processing..."
+
+                    // Update only if classification result has changed
+                    if (activity != lastActivityClassification) {
+                        activityTextView.text = activity
+                        lastActivityClassification = activity
+                    }
+                    if (socialSignal != lastSocialSignalClassification) {
+                        socialSignalTextView.text = socialSignal
+                        lastSocialSignalClassification = socialSignal
+                    }
+                }
+            }
+        }
+        registerReceiver(classificationUpdateReceiver, classificationFilter)
     }
 
-    // Initialises the chart for the Respeck
-    private fun setupCharts() {
-        respeckChart = findViewById(R.id.respeck_chart)
 
-        // Respeck
+    private fun setupCharts() {
         time = 0f
+
+        // Initialize datasets for Respeck chart
         val entries_res_accel_x = ArrayList<Entry>()
         val entries_res_accel_y = ArrayList<Entry>()
         val entries_res_accel_z = ArrayList<Entry>()
@@ -161,24 +140,9 @@ class LiveDataActivity : AppCompatActivity() {
         dataSet_res_accel_y.setDrawCircles(false)
         dataSet_res_accel_z.setDrawCircles(false)
 
-        dataSet_res_accel_x.setColor(
-            ContextCompat.getColor(
-                this,
-                R.color.red
-            )
-        )
-        dataSet_res_accel_y.setColor(
-            ContextCompat.getColor(
-                this,
-                R.color.green
-            )
-        )
-        dataSet_res_accel_z.setColor(
-            ContextCompat.getColor(
-                this,
-                R.color.blue
-            )
-        )
+        dataSet_res_accel_x.color = ContextCompat.getColor(this, R.color.red)
+        dataSet_res_accel_y.color = ContextCompat.getColor(this, R.color.green)
+        dataSet_res_accel_z.color = ContextCompat.getColor(this, R.color.blue)
 
         val dataSetsRes = ArrayList<ILineDataSet>()
         dataSetsRes.add(dataSet_res_accel_x)
@@ -188,6 +152,26 @@ class LiveDataActivity : AppCompatActivity() {
         allRespeckData = LineData(dataSetsRes)
         respeckChart.data = allRespeckData
         respeckChart.invalidate()
+    }
+
+    private fun startClassification() {
+        val intent = Intent(this, ClassificationService::class.java)
+        ContextCompat.startForegroundService(this, intent)
+        Log.d("LiveDataActivity", "Started ClassificationService")
+
+        // Update TextViews to indicate processing
+        activityTextView.text = "Processing..."
+        socialSignalTextView.text = "Processing..."
+    }
+
+    private fun stopClassification() {
+        val intent = Intent(this, ClassificationService::class.java)
+        stopService(intent)
+        Log.d("LiveDataActivity", "Stopped ClassificationService")
+
+        // Update the text views after classification has stopped
+        activityTextView.text = "Please start classification"
+        socialSignalTextView.text = "Please start classification"
     }
 
     private fun updateGraph(graph: String, x: Float, y: Float, z: Float) {
@@ -209,23 +193,7 @@ class LiveDataActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(respeckLiveUpdateReceiver)
+        unregisterReceiver(classificationUpdateReceiver)
         looperRespeck.quit()
-    }
-
-    // ADDED FOR ML
-    private fun handleSensorData(x: Float, y: Float, z: Float) {
-        val activity = activityClassifier.addSensorData(x, y, z)
-        if (activity != null) {
-            runOnUiThread {
-                findViewById<TextView>(R.id.activity_classification).text = activity
-            }
-        }
-
-        val socialSignal = socialSignalClassifier.addSensorData(x, y, z)
-        if (socialSignal != null) {
-            runOnUiThread {
-                findViewById<TextView>(R.id.social_signal_classification).text = socialSignal
-            }
-        }
     }
 }
