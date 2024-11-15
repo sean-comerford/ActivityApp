@@ -14,7 +14,7 @@ interface ActivityLogDao {
     suspend fun getLogForActivity(date: String, activityType: String): DailyActivityLog?
 
     @Query("SELECT * FROM daily_activity_log WHERE date = :date")
-    suspend fun getLogsForDate(date: String): List<DailyActivityLog>
+    fun getActivitiesByDate(date: String): List<DailyActivityLog>
 
     // Method to get the total count of entries
     @Query("SELECT COUNT(*) FROM daily_activity_log")

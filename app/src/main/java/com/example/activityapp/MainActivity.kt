@@ -20,7 +20,6 @@ import com.example.activityapp.live.LiveDataActivity
 import com.example.activityapp.onboarding.OnBoardingActivity
 import com.example.activityapp.utils.Constants
 import com.example.activityapp.utils.Utils
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     // Buttons for navigating to various activities
     lateinit var liveProcessingButton: Button
     lateinit var pairingButton: Button
+    lateinit var viewHistoricalActivityButton: Button // New button for historical activity
 
     // Permissions
     lateinit var permissionAlertDialog: AlertDialog.Builder
@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         liveProcessingButton = findViewById(R.id.activity_button)
         pairingButton = findViewById(R.id.ble_button)
+        viewHistoricalActivityButton = findViewById(R.id.view_historical_activity_button) // Initialize new button
         permissionAlertDialog = AlertDialog.Builder(this)
 
         setupClickListeners()
@@ -78,6 +79,15 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ConnectingActivity::class.java)
             startActivity(intent)
         }
+
+        viewHistoricalActivityButton.setOnClickListener {
+            goToHistoricalActivity()
+        }
+    }
+
+    private fun goToHistoricalActivity() {
+        val intent = Intent(this, HistoricalActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setupPermissions() {

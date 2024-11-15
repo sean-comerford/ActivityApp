@@ -12,7 +12,7 @@ interface SocialSignalLogDao {
     suspend fun getLogForSocialSignal(date: String, socialSignalType: String): DailySocialSignalLog?
 
     @Query("SELECT * FROM daily_social_signal_log WHERE date = :date")
-    suspend fun getLogsForDate(date: String): List<DailySocialSignalLog>
+    fun getActivitiesByDate(date: String): List<DailySocialSignalLog>
 
     @Query("SELECT COUNT(*) FROM daily_social_signal_log")
     suspend fun getCount(): Int
