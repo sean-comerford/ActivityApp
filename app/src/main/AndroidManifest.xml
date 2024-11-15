@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.activityapp">
 
-    <uses-permission android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,9 +15,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NFC" />
 
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
+    <!-- Features -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -30,6 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Services -->
         <service
             android:name=".bluetooth.BluetoothSpeckService"
             android:enabled="true"
@@ -39,11 +38,21 @@
             android:name=".services.ClassificationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location" /> <!-- Add this entry for ClassificationService -->
+            android:foregroundServiceType="location" />
 
+        <service
+            android:name=".bluetooth.BluetoothService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.specknet.respeckmodeltesting.RESPECK_BROADCAST" />
+            </intent-filter>
+        </service>
+
+        <!-- Activities -->
         <activity
-            android:exported="true"
             android:name=".live.LiveDataActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.specknet.respeck.RESPECK_LIVE_BROADCAST" />
@@ -68,8 +77,8 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:exported="true"
             android:name=".bluetooth.ConnectingActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.activityapp.RESPECK_CONNECTED" />
@@ -78,15 +87,6 @@
                 <action android:name="com.example.activityapp.RESPECK_DISCONNECTED" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".bluetooth.BluetoothService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.specknet.respeckmodeltesting.RESPECK_BROADCAST" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".onboarding.OnBoardingActivity"
@@ -108,6 +108,12 @@
                 <action android:name="com.specknet.respeckmodeltesting.RESPECK_DISCONNECTED" />
             </intent-filter>
         </activity>
+
+        <!-- New Historical Activity -->
+        <activity
+            android:name=".HistoricalActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
