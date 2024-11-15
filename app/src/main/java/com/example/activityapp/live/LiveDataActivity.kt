@@ -39,6 +39,10 @@ class LiveDataActivity : AppCompatActivity() {
     private lateinit var classificationUpdateReceiver: BroadcastReceiver
     private lateinit var looperRespeck: Looper
 
+    // Variables to track last classifications
+    private var lastActivityClassification: String? = null
+    private var lastSocialSignalClassification: String? = null
+
     // Intent filters
     private val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
     private val classificationFilter = IntentFilter(Constants.ACTION_CLASSIFICATION_UPDATE)
@@ -101,19 +105,24 @@ class LiveDataActivity : AppCompatActivity() {
         classificationUpdateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == Constants.ACTION_CLASSIFICATION_UPDATE) {
-                    val activity = intent.getStringExtra("activity")
-                    val socialSignal = intent.getStringExtra("socialSignal")
+                    val activity = intent.getStringExtra(Constants.EXTRA_ACTIVITY_RESULT) ?: "Processing..."
+                    val socialSignal = intent.getStringExtra(Constants.EXTRA_SOCIAL_SIGNAL_RESULT) ?: "Processing..."
 
-                    // Update UI elements with classification results
-                    activityTextView.text = activity ?: "Processing..."
-                    socialSignalTextView.text = socialSignal ?: "Processing..."
+                    // Update only if classification result has changed
+                    if (activity != lastActivityClassification) {
+                        activityTextView.text = activity
+                        lastActivityClassification = activity
+                    }
+                    if (socialSignal != lastSocialSignalClassification) {
+                        socialSignalTextView.text = socialSignal
+                        lastSocialSignalClassification = socialSignal
+                    }
                 }
             }
         }
-
-        // Register the classification results receiver
         registerReceiver(classificationUpdateReceiver, classificationFilter)
     }
+
 
     private fun setupCharts() {
         time = 0f
