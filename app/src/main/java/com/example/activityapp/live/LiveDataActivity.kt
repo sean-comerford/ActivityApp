@@ -10,14 +10,39 @@ import androidx.core.content.ContextCompat
 import com.example.activityapp.R
 import com.example.activityapp.services.ClassificationService
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import android.content.BroadcastReceiver
+import android.os.Looper
+import android.content.IntentFilter
+import com.example.activityapp.utils.Constants
+import android.content.Context
+import com.example.activityapp.utils.RESpeckLiveData
+
 
 class LiveDataActivity : AppCompatActivity() {
+
+    // global graph variables
+    lateinit var dataSet_res_accel_x: LineDataSet
+    lateinit var dataSet_res_accel_y: LineDataSet
+    lateinit var dataSet_res_accel_z: LineDataSet
+
+    var time = 0f
+    lateinit var allRespeckData: LineData
+
+    lateinit var respeckChart: LineChart
+
+    // global broadcast receiver so we can unregister it
+    lateinit var respeckLiveUpdateReceiver: BroadcastReceiver
+    lateinit var looperRespeck: Looper
+
+    val filterTestRespeck = IntentFilter(Constants.ACTION_RESPECK_LIVE_BROADCAST)
+
 
     private lateinit var startClassificationButton: Button
     private lateinit var stopClassificationButton: Button
     private lateinit var activityTextView: TextView
     private lateinit var socialSignalTextView: TextView
-    private lateinit var respeckChart: LineChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +66,34 @@ class LiveDataActivity : AppCompatActivity() {
         stopClassificationButton.setOnClickListener {
             stopClassification()
         }
+        // set up the broadcast receiver
+        respeckLiveUpdateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.i("thread", "I am running on thread = " + Thread.currentThread().name)
+
+                val action = intent.action
+
+                if (action == Constants.ACTION_RESPECK_LIVE_BROADCAST) {
+                    val liveData =
+                        intent.getSerializableExtra(Constants.RESPECK_LIVE_DATA) as RESpeckLiveData
+                    Log.d("Live", "onReceive: liveData = $liveData")
+
+                    // get all relevant intent contents
+                    val x = liveData.accelX
+                    val y = liveData.accelY
+                    val z = liveData.accelZ
+
+                    time += 1
+                    updateGraph("respeck", x, y, z)
+                }
+            }
+        }
+        // register receiver on another thread
+        val handlerThreadRespeck = HandlerThread("bgThreadRespeckLive")
+        handlerThreadRespeck.start()
+        looperRespeck = handlerThreadRespeck.looper
+        val handlerRespeck = Handler(looperRespeck)
+        this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
     }
 
     private fun startClassification() {
