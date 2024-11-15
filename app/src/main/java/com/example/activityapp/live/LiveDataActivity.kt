@@ -18,6 +18,10 @@ import android.content.IntentFilter
 import com.example.activityapp.utils.Constants
 import android.content.Context
 import com.example.activityapp.utils.RESpeckLiveData
+import android.os.Handler
+import android.os.HandlerThread
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
 
 class LiveDataActivity : AppCompatActivity() {
@@ -96,6 +100,53 @@ class LiveDataActivity : AppCompatActivity() {
         this.registerReceiver(respeckLiveUpdateReceiver, filterTestRespeck, null, handlerRespeck)
     }
 
+    // Initialises the chart for the Respeck
+    private fun setupCharts() {
+        respeckChart = findViewById(R.id.respeck_chart)
+
+        // Respeck
+        time = 0f
+        val entries_res_accel_x = ArrayList<Entry>()
+        val entries_res_accel_y = ArrayList<Entry>()
+        val entries_res_accel_z = ArrayList<Entry>()
+
+        dataSet_res_accel_x = LineDataSet(entries_res_accel_x, "Accel X")
+        dataSet_res_accel_y = LineDataSet(entries_res_accel_y, "Accel Y")
+        dataSet_res_accel_z = LineDataSet(entries_res_accel_z, "Accel Z")
+
+        dataSet_res_accel_x.setDrawCircles(false)
+        dataSet_res_accel_y.setDrawCircles(false)
+        dataSet_res_accel_z.setDrawCircles(false)
+
+        dataSet_res_accel_x.setColor(
+            ContextCompat.getColor(
+                this,
+                R.color.red
+            )
+        )
+        dataSet_res_accel_y.setColor(
+            ContextCompat.getColor(
+                this,
+                R.color.green
+            )
+        )
+        dataSet_res_accel_z.setColor(
+            ContextCompat.getColor(
+                this,
+                R.color.blue
+            )
+        )
+
+        val dataSetsRes = ArrayList<ILineDataSet>()
+        dataSetsRes.add(dataSet_res_accel_x)
+        dataSetsRes.add(dataSet_res_accel_y)
+        dataSetsRes.add(dataSet_res_accel_z)
+
+        allRespeckData = LineData(dataSetsRes)
+        respeckChart.data = allRespeckData
+        respeckChart.invalidate()
+    }
+
     private fun startClassification() {
         // Start the ClassificationService
         val intent = Intent(this, ClassificationService::class.java)
@@ -104,6 +155,28 @@ class LiveDataActivity : AppCompatActivity() {
 
         activityTextView.text = "Classification Started"
         socialSignalTextView.text = "Classification Started"
+    }
+
+    private fun updateGraph(graph: String, x: Float, y: Float, z: Float) {
+        if (graph == "respeck") {
+            dataSet_res_accel_x.addEntry(Entry(time, x))
+            dataSet_res_accel_y.addEntry(Entry(time, y))
+            dataSet_res_accel_z.addEntry(Entry(time, z))
+
+            runOnUiThread {
+                allRespeckData.notifyDataChanged()
+                respeckChart.notifyDataSetChanged()
+                respeckChart.invalidate()
+                respeckChart.setVisibleXRangeMaximum(150f)
+                respeckChart.moveViewToX(respeckChart.lowestVisibleX + 40)
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(respeckLiveUpdateReceiver)
+        looperRespeck.quit()
     }
 
     private fun stopClassification() {
@@ -116,7 +189,4 @@ class LiveDataActivity : AppCompatActivity() {
         socialSignalTextView.text = "Classification Stopped"
     }
 
-    private fun setupCharts() {
-        // Initialize the chart components as needed
-    }
 }
