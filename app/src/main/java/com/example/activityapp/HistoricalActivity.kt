@@ -77,6 +77,16 @@ class HistoricalActivity : AppCompatActivity() {
         data: List<Pair<String, Float>>,
         label: String
     ) {
+
+        if (data.isEmpty()) {
+            // Show a message when there is no data
+            chart.clear() // Clear existing data
+            chart.setNoDataText("No activity data available for this day")
+            chart.setNoDataTextColor(android.graphics.Color.GRAY) // Optional: Customize text color
+            chart.invalidate() // Refresh the chart
+            return
+        }
+
         val entries = data.mapIndexed { index, entry ->
             BarEntry(index.toFloat(), entry.second)
         }
@@ -112,7 +122,9 @@ class HistoricalActivity : AppCompatActivity() {
         }
 
         chart.axisRight.isEnabled = false // Disable right axis for clarity
-       // chart.setPinchZoom(false) // Disable pinch zooming
+        chart.setPinchZoom(false) // Disable pinch zooming
+        chart.setDoubleTapToZoomEnabled(false) // Disable zooming via double-tap
+
         chart.description.isEnabled = false // Disable description text
         chart.legend.isEnabled = false // Disable legend for a cleaner look
 

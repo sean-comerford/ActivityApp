@@ -24,6 +24,16 @@
                 android:gravity="center"
                 android:paddingBottom="16dp" />
 
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select a date on the calendar and press the button below to view the charts of your activity history on that day"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:lineSpacingExtra="4dp" />
+
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -35,20 +45,59 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
             </FrameLayout>
+
+
+
             <Button
                 android:id="@+id/btn_view_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View activity"
-                android:layout_marginTop="16dp"
+                android:text="View Activity History"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="16dp"
                 android:layout_gravity="center_horizontal"
                 />
+
+
+            <TextView
+                android:id="@+id/bar_view"
+                android:layout_width="315dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:paddingBottom="8dp"
+                android:text="Select a category bar on the graph to view the exact time you spent doing that activity"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/title_activity_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Physical Activity History (Hours)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="16dp" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_activity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/title_social_signal_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Social Signal History (Hours)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="16dp" />
+
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_social_signal"
