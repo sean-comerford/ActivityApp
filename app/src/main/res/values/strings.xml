@@ -17,11 +17,11 @@
     <string name="title_activity_tab_animation">Tabs Animation</string>
     <string name="title_activity_sticky_view">StickyViewActivity</string>
 
-    <string name="section_bluetooth">Welcome to the Activity App. Use it to connect to your Respeck or Thingy devices and track your activity.</string>
-    <string name="section_record">You can record data from the sensors in a locally stored csv file.</string>
-    <string name="section_live">You can also view the live data once the sensors are connected.</string>
+    <string name="section_bluetooth">Welcome to the Activity App. Use it to connect to your Respeck device to track your data.</string>
+    <string name="section_record">You can process data from the sensor to view your live activity classification .</string>
+    <string name="section_live">You can also view the time you spent doing each activity in the past.</string>
     <string name="section_bluetooth_title">Connect</string>
-    <string name="section_record_title">Record</string>
+    <string name="section_record_title">Classify</string>
     <string name="section_live_title">View</string>
 
     <!-- TODO: Remove or change this placeholder text -->
