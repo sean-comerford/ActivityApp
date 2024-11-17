@@ -15,6 +15,13 @@ import kotlinx.coroutines.launch
 import com.example.activityapp.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import android.widget.Toast
+
+
+
 class HistoricalActivity : AppCompatActivity() {
 
     private lateinit var datePicker: DatePicker
@@ -77,14 +84,35 @@ class HistoricalActivity : AppCompatActivity() {
         }
 
         val labels = data.map { it.first }
+
+        // Determine the maximum value dynamically
+        val maxValue = (data.maxOfOrNull { it.second } ?: 0f).coerceAtMost(24f)
+
         chart.xAxis.apply {
             valueFormatter = IndexAxisValueFormatter(labels)
+            position = com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP // Position labels at the top
             granularity = 1f
             textSize = 12f
         }
 
+        chart.axisLeft.apply {
+            axisMinimum = 0f // Start at 0
+            axisMaximum = maxValue + 0.5f // Add 0.5 to ensure smallest value is at the end
+            granularity = 0.5f // Steps of 0.5 hours
+            setDrawGridLines(true) // Enable grid lines
+            labelCount = ((maxValue * 2).toInt() + 1) // Dynamically adjust label count for 0.5-hour increments
+        }
+
+        chart.axisRight.isEnabled = false // Disable right axis for clarity
+
         chart.data = BarData(barDataSet)
         chart.invalidate() // Refresh the chart
     }
+
+
+
+
+
+
 }
 
