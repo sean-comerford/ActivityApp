@@ -93,19 +93,17 @@ class HistoricalActivity : AppCompatActivity() {
             position = com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP // Position labels at the top
             granularity = 1f
             textSize = 12f
+            setDrawGridLines(false) // Disable grid lines along the X-axis (horizontal visually)
         }
 
         chart.axisLeft.apply {
             axisMinimum = 0f // Start at 0
             axisMaximum = maxValue // Dynamically set based on data, capped at 24
             granularity = 0.5f // Steps of 0.5 hours
-            setDrawGridLines(false) // Disable horizontal grid lines
+            setDrawGridLines(true) // Enable Y-axis grid lines (vertical visually)
         }
 
         chart.axisRight.isEnabled = false // Disable right axis for clarity
-
-        // Disable horizontal grid lines for right axis
-        chart.axisRight.setDrawGridLines(false)
 
         chart.description.isEnabled = false // Disable description text
         chart.legend.isEnabled = false // Disable legend for a cleaner look
@@ -140,10 +138,6 @@ class HistoricalActivity : AppCompatActivity() {
         chart.data = BarData(barDataSet)
         chart.invalidate() // Refresh the chart
     }
-
-
-
-
 
 
 
