@@ -1,47 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".live.LiveDataActivity">
 
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        android:src="@android:drawable/ic_menu_revert"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Go Back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Centered Title -->
+    <TextView
+        android:id="@+id/title_activity_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:text="Activity History"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
-
-
+    <!-- Scrollable Content -->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/title_activity_history"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
-
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="8dp"
-                android:src="@android:drawable/ic_menu_revert"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Go Back"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true" />
-
-
-            <TextView
-                android:id="@+id/title_activity_history"
-                android:layout_width="215dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="16dp"
-                android:text="Activity History"
-                android:textSize="30sp"
-                android:layout_gravity="center"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/info_text"
@@ -52,7 +59,6 @@
                 android:paddingBottom="16dp"
                 android:text="Select a date on the calendar and press the button below to view the charts of your activity history on that day"
                 android:textSize="16sp" />
-
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -65,7 +71,6 @@
                     android:layout_gravity="center" />
             </FrameLayout>
 
-
             <Button
                 android:id="@+id/btn_view_activity"
                 android:layout_width="wrap_content"
@@ -74,7 +79,6 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="16dp"
                 android:text="View Activity History" />
-
 
             <TextView
                 android:id="@+id/bar_view"
@@ -114,7 +118,6 @@
                 android:text="Social Signal History (Hours)"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_social_signal"

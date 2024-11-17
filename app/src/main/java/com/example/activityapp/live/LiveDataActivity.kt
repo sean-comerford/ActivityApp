@@ -23,6 +23,9 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
+import android.widget.ImageButton
+
+
 class LiveDataActivity : AppCompatActivity() {
 
     // Graph variables
@@ -66,6 +69,13 @@ class LiveDataActivity : AppCompatActivity() {
 
         // Set up the chart
         setupCharts()
+
+        // Initialize the back button
+        val backButton: ImageButton = findViewById(R.id.btn_back)
+        backButton.setOnClickListener {
+            finish() // Closes this activity and returns to the previous one
+        }
+
 
         // Set click listeners for classification control buttons
         startClassificationButton.setOnClickListener {
@@ -151,6 +161,9 @@ class LiveDataActivity : AppCompatActivity() {
 
         allRespeckData = LineData(dataSetsRes)
         respeckChart.data = allRespeckData
+
+        // Disable the description label
+        respeckChart.description.isEnabled = false
         respeckChart.invalidate()
     }
 

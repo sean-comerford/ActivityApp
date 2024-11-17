@@ -163,7 +163,7 @@ class HistoricalActivity : AppCompatActivity() {
                     // Show precise time value as a toast
                     Toast.makeText(
                         chart.context,
-                        "Selected Time: $formattedTime (hh:mm:ss)",
+                        "Activity Time: $formattedTime (hh:mm:ss)",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
