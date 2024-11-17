@@ -29,13 +29,13 @@
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_activity"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_social_signal"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />
 
         </LinearLayout>

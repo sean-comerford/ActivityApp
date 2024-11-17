@@ -20,6 +20,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import android.widget.Toast
 
+import android.util.TypedValue
+import android.widget.LinearLayout
+import android.view.ViewGroup
 
 
 class HistoricalActivity : AppCompatActivity() {
@@ -83,9 +86,13 @@ class HistoricalActivity : AppCompatActivity() {
             valueTextSize = 12f
         }
 
+        val barData = BarData(barDataSet).apply {
+            barWidth = 0.5f // Set a consistent bar thickness
+        }
+
         val labels = data.map { it.first }
 
-        // Determine the maximum value dynamically
+        // Determine the maximum value dynamically for the time axis
         val maxValue = (data.maxOfOrNull { it.second } ?: 0f).coerceAtMost(24f) + 0.5f
 
         chart.xAxis.apply {
@@ -94,6 +101,7 @@ class HistoricalActivity : AppCompatActivity() {
             granularity = 1f
             textSize = 12f
             setDrawGridLines(false) // Disable grid lines along the X-axis (horizontal visually)
+            setAvoidFirstLastClipping(true) // Prevent category labels from clipping
         }
 
         chart.axisLeft.apply {
@@ -104,7 +112,7 @@ class HistoricalActivity : AppCompatActivity() {
         }
 
         chart.axisRight.isEnabled = false // Disable right axis for clarity
-
+       // chart.setPinchZoom(false) // Disable pinch zooming
         chart.description.isEnabled = false // Disable description text
         chart.legend.isEnabled = false // Disable legend for a cleaner look
 
@@ -135,9 +143,30 @@ class HistoricalActivity : AppCompatActivity() {
             }
         })
 
-        chart.data = BarData(barDataSet)
+        // Dynamically adjust the chart height based on the number of categories
+        val baseHeight = 60 // Height per category in dp
+        val totalHeight = (data.size * baseHeight).coerceAtLeast(200) // Minimum height 200dp
+        val heightInPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            totalHeight.toFloat(),
+            chart.context.resources.displayMetrics
+        ).toInt()
+
+        chart.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            heightInPx
+        )
+
+        chart.data = barData
+        chart.notifyDataSetChanged() // Notify the chart about the data change
         chart.invalidate() // Refresh the chart
     }
+
+
+
+
+
+
 
 
 
