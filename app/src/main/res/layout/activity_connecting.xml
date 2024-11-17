@@ -24,7 +24,7 @@
         android:id="@+id/title_connect_sensors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect Sensors"
+        android:text="Connect Sensor"
         android:textSize="30sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -59,7 +59,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Respeck"
+                    android:text="Input the sensor ID and select the button below to connect the sensor."
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Respeck Sensor"
                     android:textSize="30dp" />
 
                 <TextView
@@ -101,7 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="20dp"
+                android:visibility="gone"> <!-- Make this section invisible -->
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -138,11 +147,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:paddingLeft="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Try to always connect both sensors." />
 
             <!-- Buttons -->
             <LinearLayout
@@ -157,7 +161,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Pair sensors and connect" />
+                    android:text="Pair sensor and connect" />
 
                 <Button
                     android:id="@+id/restart_service_button"
