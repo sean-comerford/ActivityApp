@@ -41,6 +41,10 @@ class HistoricalActivity : AppCompatActivity() {
         activityChart = findViewById(R.id.chart_activity)
         socialSignalChart = findViewById(R.id.chart_social_signal)
 
+        // Restrict the DatePicker to disable future dates
+        datePicker.maxDate = System.currentTimeMillis()
+
+
         btnViewActivity.setOnClickListener {
             val selectedDate = "${datePicker.year}-${datePicker.month + 1}-${datePicker.dayOfMonth}"
             fetchAndDisplayData(selectedDate)
