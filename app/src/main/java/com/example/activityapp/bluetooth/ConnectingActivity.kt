@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.activity_connecting.*
 import java.util.*
 import kotlin.experimental.and
 
+import android.widget.ImageButton
+
+
 class ConnectingActivity : AppCompatActivity() {
 
     val REQUEST_CODE_SCAN_RESPECK = 0
@@ -60,6 +63,12 @@ class ConnectingActivity : AppCompatActivity() {
         restartConnectionButton = findViewById(R.id.restart_service_button)
 
         thingyID = findViewById(R.id.thingy_code)
+
+        // Initialize the back button
+        val backButton: ImageButton = findViewById(R.id.btn_back)
+        backButton.setOnClickListener {
+            finish() // Closes the current activity and returns to the previous one
+        }
 
         scanRespeckButton.setOnClickListener {
             val barcodeScanner = Intent(this, BarcodeActivity::class.java)
