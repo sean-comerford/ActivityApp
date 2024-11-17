@@ -14,17 +14,35 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <DatePicker
-                android:id="@+id/date_picker"
+            <TextView
+                android:id="@+id/title_activity_history"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Activity History"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="16dp" />
 
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <DatePicker
+                    android:id="@+id/date_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
             <Button
                 android:id="@+id/btn_view_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View activity"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center_horizontal"
+                />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_activity"
