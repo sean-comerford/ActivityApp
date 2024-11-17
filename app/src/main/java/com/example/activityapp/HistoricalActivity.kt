@@ -79,14 +79,14 @@ class HistoricalActivity : AppCompatActivity() {
         }
 
         val barDataSet = BarDataSet(entries, label).apply {
-            setDrawValues(true)
+            setDrawValues(false) // Disable value display on bars
             valueTextSize = 12f
         }
 
         val labels = data.map { it.first }
 
         // Determine the maximum value dynamically
-        val maxValue = (data.maxOfOrNull { it.second } ?: 0f).coerceAtMost(24f)
+        val maxValue = (data.maxOfOrNull { it.second } ?: 0f).coerceAtMost(24f) + 0.5f
 
         chart.xAxis.apply {
             valueFormatter = IndexAxisValueFormatter(labels)
@@ -97,17 +97,50 @@ class HistoricalActivity : AppCompatActivity() {
 
         chart.axisLeft.apply {
             axisMinimum = 0f // Start at 0
-            axisMaximum = maxValue + 0.5f // Add 0.5 to ensure smallest value is at the end
+            axisMaximum = maxValue // Dynamically set based on data, capped at 24
             granularity = 0.5f // Steps of 0.5 hours
-            setDrawGridLines(true) // Enable grid lines
-            labelCount = ((maxValue * 2).toInt() + 1) // Dynamically adjust label count for 0.5-hour increments
+            setDrawGridLines(false) // Disable horizontal grid lines
         }
 
         chart.axisRight.isEnabled = false // Disable right axis for clarity
 
+        // Disable horizontal grid lines for right axis
+        chart.axisRight.setDrawGridLines(false)
+
+        chart.description.isEnabled = false // Disable description text
+        chart.legend.isEnabled = false // Disable legend for a cleaner look
+
+        // Enable highlighting and interaction
+        chart.setHighlightPerTapEnabled(true)
+        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                e?.let {
+                    // Get the time value of the selected bar
+                    val timeValueInHours = it.y
+                    val hours = timeValueInHours.toInt()
+                    val minutes = ((timeValueInHours - hours) * 60).toInt()
+                    val seconds = (((timeValueInHours - hours) * 60 - minutes) * 60).toInt()
+
+                    val formattedTime = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+
+                    // Show precise time value as a toast
+                    Toast.makeText(
+                        chart.context,
+                        "Selected Time: $formattedTime (hh:mm:ss)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onNothingSelected() {
+                // No action needed when no bar is selected
+            }
+        })
+
         chart.data = BarData(barDataSet)
         chart.invalidate() // Refresh the chart
     }
+
 
 
 
