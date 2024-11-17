@@ -4,7 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
+
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -14,25 +19,39 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="8dp"
+                android:src="@android:drawable/ic_menu_revert"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Go Back"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
+
+
             <TextView
                 android:id="@+id/title_activity_history"
-                android:layout_width="match_parent"
+                android:layout_width="215dp"
                 android:layout_height="wrap_content"
-                android:text="Activity History"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="16dp"
+                android:text="Activity History"
+                android:textSize="30sp"
+                android:layout_gravity="center"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select a date on the calendar and press the button below to view the charts of your activity history on that day"
-                android:textSize="16sp"
                 android:gravity="center"
+                android:lineSpacingExtra="4dp"
                 android:paddingBottom="16dp"
-                android:lineSpacingExtra="4dp" />
+                android:text="Select a date on the calendar and press the button below to view the charts of your activity history on that day"
+                android:textSize="16sp" />
 
 
             <FrameLayout
@@ -47,16 +66,14 @@
             </FrameLayout>
 
 
-
             <Button
                 android:id="@+id/btn_view_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View Activity History"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="16dp"
-                android:layout_gravity="center_horizontal"
-                />
+                android:text="View Activity History" />
 
 
             <TextView
@@ -74,12 +91,12 @@
                 android:id="@+id/title_activity_chart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:text="Physical Activity History (Hours)"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingTop="16dp" />
+                android:textStyle="bold" />
 
             <com.github.mikephil.charting.charts.HorizontalBarChart
                 android:id="@+id/chart_activity"
@@ -91,12 +108,12 @@
                 android:id="@+id/title_social_signal_chart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 android:text="Social Signal History (Hours)"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:paddingBottom="8dp"
-                android:paddingTop="16dp" />
+                android:textStyle="bold" />
 
 
             <com.github.mikephil.charting.charts.HorizontalBarChart

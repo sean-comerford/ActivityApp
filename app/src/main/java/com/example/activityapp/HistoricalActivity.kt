@@ -25,6 +25,12 @@ import android.widget.LinearLayout
 import android.view.ViewGroup
 
 
+import android.widget.ImageButton
+
+
+
+
+
 class HistoricalActivity : AppCompatActivity() {
 
     private lateinit var datePicker: DatePicker
@@ -35,6 +41,15 @@ class HistoricalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_historical_activity)
+
+        // Set up the back button
+        val btnBack: ImageButton = findViewById(R.id.btn_back)
+        btnBack.setOnClickListener {
+            finish() // Finish this activity and go back to the previous one
+        }
+
+
+
 
         datePicker = findViewById(R.id.date_picker)
         btnViewActivity = findViewById(R.id.btn_view_activity)
