@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,57 +12,98 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Connect Sensors Button -->
-        <Button
-            android:id="@+id/ble_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:text="Connect sensors"
-            android:layout_marginTop="100px"
-            android:layout_marginBottom="100px"
-            android:background="#03A9F4"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <!-- View Current Activity Button -->
-        <Button
-            android:id="@+id/activity_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100px"
-            android:background="#03A9F4"
-            android:text="View Current Activity"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ble_button" />
-
-        <!-- View Historical Activity Button -->
-        <Button
-            android:id="@+id/view_historical_activity_button"
-            android:layout_width="550px"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100px"
-            android:background="#03A9F4"
-            android:text="View historical activity"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_button" />
-
-        <!-- Heading Text -->
+        <!-- Page Title -->
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/home_page_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100px"
-            android:text="I want to"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Home Page"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#000000"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/ble_button" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
 
+        <!-- Centering the content -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/home_page_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Heading Text -->
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="1. Connect the sensor to the app"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <!-- Connect Sensors Button -->
+            <Button
+                android:id="@+id/ble_button"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="Connect sensor"
+                android:layout_marginBottom="20dp"
+                android:background="#03A9F4"
+                android:textColor="#FFFFFF" />
+
+            <!-- Heading Text -->
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="2. Start the activity classification process and view the live results"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <!-- View Current Activity Button -->
+            <Button
+                android:id="@+id/activity_button"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="View Live Activity Processing"
+                android:layout_marginBottom="20dp"
+                android:background="#03A9F4"
+                android:textColor="#FFFFFF" />
+
+            <!-- Heading Text -->
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="275dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="3. View your activity history "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- View Historical Activity Button -->
+            <Button
+                android:id="@+id/view_historical_activity_button"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="View activity history"
+                android:background="#03A9F4"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
