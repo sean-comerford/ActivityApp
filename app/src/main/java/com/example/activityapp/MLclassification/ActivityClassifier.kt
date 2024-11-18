@@ -12,13 +12,13 @@ import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
-class ActivityClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 250) { /// CHANGE WINDOW SIZE
+class ActivityClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 100) { /// CHANGE WINDOW SIZE
     // Loads activity_model.tflite and performs inference
     private val interpreter: Interpreter
     // Creates empty list of FloatArray elements. Each FloatArray element holds the x, y and z values of sensor readings
     private val buffer = mutableListOf<FloatArray>()
 
-    // Define period (seconds) between classification results
+    // Define period (seconds) between making a classification
     private val classification_period = 2
     // This will be the amount of buffer readings removed after every classification is made
     private val bufferReadingsToRemove = classification_period * 25

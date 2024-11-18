@@ -12,7 +12,7 @@ import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
-class SocialSignalClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 200 ) {
+class SocialSignalClassifier(context: Context, private val activityLogger: ActivityLogger, private val windowSize: Int = 100 ) {
     private val interpreter: Interpreter
     private val buffer = mutableListOf<FloatArray>()
 
