@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Activity App</string>
+    <string name="app_name">Actify</string>
     <string name="ble_name">Name: %1$s</string>
     <string name="ble_mac">MAC: %1$s</string>
     <string name="ble_signal">Signal: %1$d</string>
@@ -17,7 +17,7 @@
     <string name="title_activity_tab_animation">Tabs Animation</string>
     <string name="title_activity_sticky_view">StickyViewActivity</string>
 
-    <string name="section_bluetooth">Welcome to the Activity App. Use it to connect to your Respeck device to track your data.</string>
+    <string name="section_bluetooth">Welcome to the Actify App. Use it to connect to your Respeck device to track your data.</string>
     <string name="section_record">You can process data from the sensor to view your live activity classification .</string>
     <string name="section_live">You can also view the time you spent doing each activity in the past.</string>
     <string name="section_bluetooth_title">Connect</string>
