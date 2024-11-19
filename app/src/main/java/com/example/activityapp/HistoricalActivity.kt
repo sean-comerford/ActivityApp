@@ -128,6 +128,7 @@ class HistoricalActivity : AppCompatActivity() {
             valueFormatter = IndexAxisValueFormatter(labels)
             position = com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP // Position labels at the top
             granularity = 1f
+            labelCount = labels.size
             textSize = 12f
             setDrawGridLines(false) // Disable grid lines along the X-axis (horizontal visually)
             setAvoidFirstLastClipping(true) // Prevent category labels from clipping
@@ -141,11 +142,11 @@ class HistoricalActivity : AppCompatActivity() {
         }
 
         chart.axisRight.isEnabled = false // Disable right axis for clarity
-        chart.setPinchZoom(false) // Disable pinch zooming
-        chart.setDoubleTapToZoomEnabled(false) // Disable zooming via double-tap
+
 
         chart.description.isEnabled = false // Disable description text
         chart.legend.isEnabled = false // Disable legend for a cleaner look
+
 
         // Enable highlighting and interaction
         chart.setHighlightPerTapEnabled(true)
@@ -202,4 +203,3 @@ class HistoricalActivity : AppCompatActivity() {
 
 
 }
-

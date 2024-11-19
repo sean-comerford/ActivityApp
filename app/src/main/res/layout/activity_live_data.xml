@@ -33,108 +33,118 @@
         android:layout_marginTop="16dp" />
 
     <!-- Main Content -->
-    <LinearLayout
-        android:id="@+id/main_content_layout"
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/title_live_data"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/info_text"
+        <LinearLayout
+            android:id="@+id/main_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:lineSpacingExtra="4dp"
-            android:paddingBottom="16dp"
-            android:text="Select the start button to begin the activity classification and view the live feed below. The app activity classification will continue running in the background until the stop button is selected."
-            android:textSize="16sp" />
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@id/title_live_data"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:paddingBottom="16dp"
+                android:text="Select the start button to begin the activity classification and view the live feed below. The app activity classification will continue running in the background until the stop button is selected."
+                android:textSize="16sp" />
 
 
 
 
-        <!-- Start and Stop Classification Buttons -->
-        <Button
-            android:id="@+id/start_classification_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Classification"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp" />
+            <!-- Start and Stop Classification Buttons -->
+            <Button
+                android:id="@+id/start_classification_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Classification"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
 
-        <Button
-            android:id="@+id/stop_classification_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop Classification"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp" />
+            <Button
+                android:id="@+id/stop_classification_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop Classification"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp" />
 
-        <!-- Classification Result Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text=" Physical Activity Being Performed:"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            <!-- Classification Result Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=" Physical Activity Being Performed:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
 
-        <TextView
-            android:id="@+id/activity_classification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:textColor="@android:color/holo_blue_dark"
-            android:text="Please start classification"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/activity_classification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:text="Please start classification"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text=" Social Signal Being Performed:"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text=" Social Signal Being Performed:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
 
-        <TextView
-            android:id="@+id/social_signal_classification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:textColor="@android:color/holo_blue_dark"
-            android:text="Please start classification"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/social_signal_classification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:text="Please start classification"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
 
-        <!-- Respeck Live Data Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Respeck Sensor Live Data"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
-            android:layout_gravity="center" />
+            <!-- Respeck Live Data Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Respeck Sensor Live Data"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:layout_gravity="center" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/respeck_chart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp" />
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/respeck_chart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp" />
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
