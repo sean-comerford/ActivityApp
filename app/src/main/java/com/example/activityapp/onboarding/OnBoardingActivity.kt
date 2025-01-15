@@ -121,7 +121,6 @@ class OnBoardingActivity : AppCompatActivity() {
 
         mFinishBtn.setOnClickListener {
             finish()
-            // TODO only here should you save the shared preference
         }
     }
 

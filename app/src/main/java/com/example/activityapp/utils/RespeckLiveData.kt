@@ -4,8 +4,6 @@ import java.io.Serializable
 
 /**
  * Class for storing all RESpeck data
- * TODO: use [AccelerometerReading] data class for accelerometer data?
- *  other data classes could also substitute breathing / activity / battery data
  */
 data class RESpeckLiveData(
     val phoneTimestamp: Long,
